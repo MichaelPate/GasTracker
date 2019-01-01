@@ -9,70 +9,75 @@ import java.util.List;
 
 public class entryViewActivity extends AppCompatActivity {
 
-    private int entryIndex = 0;
+    private int entryId = 0;
+    private logEntryClass entryToView;
 
-    private sqliteHelperClass database = null;
+    // Database information
+    private sqliteHelperClass db = null;
     private List<logEntryClass> entryList;
+
+    // UI Members
+    private TextView date_view;
+    private TextView distance_view;
+    private TextView price_view;
+    private TextView volume_view;
+    private TextView cost_view;
+    private TextView title_bar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_entry_view);
 
-        database = new sqliteHelperClass(this);
-        entryList = database.getAllEntries();
+        // Init. the database and get all entries
+        db = new sqliteHelperClass(this);
+        entryList = db.getAllEntries();
 
-        // Define ui members
-        TextView tv = (TextView) findViewById(R.id.testView);
-        TextView edate = (TextView) findViewById(R.id.dateBox);
-        TextView edistance = (TextView) findViewById(R.id.distanceBox);
-        TextView eprice = (TextView) findViewById(R.id.priceBox);
-        TextView evolume = (TextView) findViewById(R.id.volumeBox);
-        TextView ecost = (TextView) findViewById(R.id.totalBox);
+        // Init. the UI members
+        date_view = findViewById(R.id.dateBox);
+        distance_view = findViewById(R.id.distanceBox);
+        price_view = findViewById(R.id.priceBox);
+        volume_view = findViewById(R.id.volumeBox);
+        cost_view = findViewById(R.id.totalBox);
+        title_bar = findViewById(R.id.testView);
 
-        // Get and parse the index
-        String index = getIntent().getStringExtra("id");
-        index = index.split(" ")[0];
-        entryIndex = Integer.parseInt(index);
+        // Get the entry ID from the intent
+        entryId = Integer.parseInt(getIntent().getStringExtra("id").split(" ")[0]);
 
         // Set the title to make it looks nice
-        tv.setText("Entry #" + index);
+        title_bar.setText("Entry #" + entryId);
 
-        // index now has the index of the entry, so find that and display the information
-        logEntryClass currentEntry = database.getEntry(entryIndex);
-        edate.setText(currentEntry.getDate());
-        edistance.setText(currentEntry.getDistance());
-        eprice.setText(currentEntry.getPrice());
-        evolume.setText(currentEntry.getVolume());
-        ecost.setText(currentEntry.getCost());
-
+        // Get the entry and update the UI elements
+        entryToView = db.getEntry(entryId);
+        date_view.setText(entryToView.getDate());
+        distance_view.setText(entryToView.getDistance());
+        price_view.setText(entryToView.getPrice());
+        volume_view.setText(entryToView.getVolume());
+        cost_view.setText(entryToView.getCost());
     }
 
     public void delete(View v) {
-        // delete entry at entryIndex
-        database.deleteEntry(database.getEntry(entryIndex));
-
-        // for all entries after the one that is deleted, update their id
-        for (logEntryClass entry : database.getAllEntries()) {
-            if (entry.getId() > entryIndex) {
-                entry.setId( entry.getId() - 1);
-                database.updateEntry(entry);
+        // For any entries with a higher entryId, decrease that by one so that it closes the gap
+        for (logEntryClass e : db.getAllEntries()) {
+            if(e.getId() > entryToView.getId()) {
+                e.setId(e.getId() - 1);
+                db.updateEntry(e);
             }
         }
+
+        // Finally, delete the entry and go back
+        db.deleteEntry(entryToView);
         goBack(v);
     }
 
     public void goBack(View v) {
-        Intent openHome = new Intent(entryViewActivity.this, listActivity.class);
-        openHome.putExtra("Version", "1.0");
-        entryViewActivity.this.startActivity(openHome);
+        Intent returnBack = new Intent(entryViewActivity.this, listActivity.class);
+        entryViewActivity.this.startActivity(returnBack);
     }
 
     public void editEntry(View v) {
-        // Pass along the index, so that the editor can open that and autofill the forms, and
-        // so it knows where to save the changes to.
         Intent editEntry = new Intent(entryViewActivity.this, entryEditorActivity.class);
-        editEntry.putExtra("id", Integer.toString(entryIndex));
+        editEntry.putExtra("id", Integer.toString(entryId));
         entryViewActivity.this.startActivity(editEntry);
     }
 }
