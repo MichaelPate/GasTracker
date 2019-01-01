@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+
+<log>
+    <entry id='1'>
+        <date>01/01/1970</date>
+        <distance>1.0</distance>
+        <price>0.20</price>
+        <volume>0.050</volume>
+        <total>0.40</total>
+    </entry>
+
+    <entry id='2'>
+        <date>06/29/2001</date>
+        <distance>420.69</distance>
+        <price>6.66</price>
+        <volume>1.234</volume>
+        <total>9.99</total>
+    </entry>
+
+</log>

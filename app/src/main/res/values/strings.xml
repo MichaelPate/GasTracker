@@ -1,0 +1,24 @@
+<resources>
+    <string name="app_name">Gas Tracker</string>
+    <string name="dateLbl">Date:</string>
+    <string name="dateBox">Current Date</string>
+    <string name="totalEntriesLbl">Total Entries:</string>
+    <string name="totalExpenseLbl">Total Expense:</string>
+    <string name="totalVolumeLbl">Total Volume:</string>
+    <string name="avgPriceLbl">Avg. Price:</string>
+    <string name="money">$</string>
+    <string name="number">#</string>
+    <string name="newEntryBtn">NEW ENTRY</string>
+    <string name="viewEntriesBtn">VIEW ENTRIES</string>
+    <string name="Credit">Created by Michael Pate, December 30, 2018. Version 1.0</string>
+    <string name="settingsBtn">SETTINGS</string>
+    <string name="refreshBtn">REFRESH</string>
+    <string name="aboutBtn">ABOUT</string>
+    <string name="totalDaysLbl">Total Days:</string>
+    <string name="homeBtn">HOME</string>
+    <string name="aboutLabel">About this App</string>
+    <string name="authorLbl">Author:</string>
+    <string name="author">Michael Pate</string>
+    <string name="createdLbl">Created On:</string>
+    <string name="versionLbl">Version:</string>
+</resources>
