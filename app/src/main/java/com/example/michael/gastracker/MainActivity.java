@@ -49,9 +49,8 @@ public class MainActivity extends AppCompatActivity {
             }
         }
 
+        // Add one so that the id wont conflict with other entries
         highestId++;
-
-        Log.w("MIKE:", " Attempting to edit " + highestId);
 
         Intent newEntry = new Intent(MainActivity.this, entryEditorActivity.class);
         newEntry.putExtra("id", Integer.toString(highestId));
