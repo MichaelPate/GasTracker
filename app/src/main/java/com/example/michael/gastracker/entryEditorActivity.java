@@ -9,76 +9,82 @@ import android.widget.TextView;
 import java.util.List;
 
 public class entryEditorActivity extends AppCompatActivity {
+    // Information about the current entry
+    private int entryId;
+    private boolean entryAlreadyExists;
 
-    private int index = 0;
-    private logEntryClass currentEntry;
+    // We need something to edit
+    logEntryClass entryToEdit;
 
-    private boolean alreadyExists;
-
-    private sqliteHelperClass database = null;
+    // Database information
+    private sqliteHelperClass db = null;
     private List<logEntryClass> entryList;
 
+    // UI Members
     private TextView date_entry;
     private TextView distance_entry;
     private TextView price_entry;
     private TextView volume_entry;
     private TextView total_entry;
+    private TextView title_bar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_entry_editor);
-        alreadyExists = false;
 
-        database = new sqliteHelperClass(this);
-        entryList = database.getAllEntries();
+        // Assume the entry does not already exist
+        entryAlreadyExists = false;
 
-        Log.w("MIKE:", "Database has been defined.");
+        // Init. the database and get all entries
+        db = new sqliteHelperClass(this);
+        entryList = db.getAllEntries();
 
-        // Define ui members
-        date_entry = (TextView)findViewById(R.id.dateEntry);
-        distance_entry = (TextView)findViewById(R.id.tripDistanceEntry);
-        price_entry = (TextView)findViewById(R.id.priceEntry);
-        volume_entry = (TextView)findViewById(R.id.volumeEntry);
-        total_entry = (TextView)findViewById(R.id.totalEntry);
+        // Init. the UI members
+        date_entry = findViewById(R.id.dateEntry);
+        distance_entry = findViewById(R.id.tripDistanceEntry);
+        price_entry = findViewById(R.id.priceEntry);
+        volume_entry = findViewById(R.id.volumeEntry);
+        total_entry = findViewById(R.id.totalEntry);
+        title_bar = findViewById(R.id.edit_title);
 
-        // Get the index
-        String rawIndex = getIntent().getStringExtra("id");
-        Log.w("MIKE:", "Received extra data: " + getIntent().getStringExtra("id"));
-        index = Integer.parseInt(rawIndex);
+        // Parse the id of the entry to edit from the Intent
+        entryId = Integer.parseInt(getIntent().getStringExtra("id"));
 
-        Log.w("MIKE:", " Editing new entry with id " + index);
+        // Set the title on the top of the screen
+        title_bar.setText("Editing Entry #" + entryId);
 
-        // Makes it look better to load the number in large letters
-        TextView titleBar = (TextView) findViewById(R.id.edit_title);
-        titleBar.setText("Editing Entry #" + index);
-
-        currentEntry = new logEntryClass(index);
-        for (logEntryClass entry : entryList) {
-            if (entry.getId() == index) {
-                // Set the UI members to display the information
-                Log.w("MIKE:", "Entry already exists, will be updating current entry");
-                alreadyExists = true;
-                date_entry.setText(entry.getDate());
-                distance_entry.setText(entry.getDistance());
-                price_entry.setText(entry.getPrice());
-                volume_entry.setText(entry.getVolume());
-                total_entry.setText(entry.getCost());
-                currentEntry = entry;
+        // Search through all entries to see if the selected entryId exists
+        entryToEdit = new logEntryClass(entryId);
+        for (logEntryClass e : entryList) {
+            if (e.getId() == entryId) {
+                entryAlreadyExists = true;
+                entryToEdit = db.getEntry(entryId);
             }
         }
+
+        // Populate the UI members with entryToEdit attribs
+        date_entry.setText(entryToEdit.getDate());
+        distance_entry.setText(entryToEdit.getDistance());
+        price_entry.setText(entryToEdit.getPrice());
+        volume_entry.setText(entryToEdit.getVolume());
+        total_entry.setText(entryToEdit.getCost());
     }
 
     public void saveChanges(View v) {
-        Log.w("MIKE:", "Entered save method.");
-        currentEntry.setDate(date_entry.getText().toString());
-        Log.w("MIKE:", date_entry.getText().toString());
-        currentEntry.setDistance(distance_entry.getText().toString());
-        currentEntry.setPrice(price_entry.getText().toString());
-        currentEntry.setVolume(volume_entry.getText().toString());
-        currentEntry.setCost(total_entry.getText().toString());
-        Log.w("MIKE:", "Data filled out");
-        writeEntry(currentEntry);
+        // Write changes to the entry copy
+        entryToEdit.setDate(date_entry.getText().toString());
+        entryToEdit.setDistance(distance_entry.getText().toString());
+        entryToEdit.setPrice(price_entry.getText().toString());
+        entryToEdit.setVolume(volume_entry.getText().toString());
+        entryToEdit.setCost(total_entry.getText().toString());
+
+        // Call the database and update the entry there
+        if (entryAlreadyExists) {
+            db.updateEntry(entryToEdit);
+        } else {
+            db.addEntry(entryToEdit);
+        }
 
         // Go back after saving
         goBack(v);
@@ -86,24 +92,14 @@ public class entryEditorActivity extends AppCompatActivity {
 
     public void goBack(View v) {
         // If the entry exists, go back to entry viewer, if not, go back to home
-        if (alreadyExists) {
+        if (entryAlreadyExists) {
             Intent goBack = new Intent(entryEditorActivity.this, entryViewActivity.class);
-            goBack.putExtra("id", Integer.toString(index) + " - ");
+            goBack.putExtra("id", Integer.toString(entryId) + " - ");
             entryEditorActivity.this.startActivity(goBack);
         } else {
             Intent goBack = new Intent(entryEditorActivity.this, MainActivity.class);
             entryEditorActivity.this.startActivity(goBack);
         }
 
-    }
-
-    public void writeEntry(logEntryClass entry) {
-        Log.w("MIKE:", "Attempting to save.");
-        if (alreadyExists) {
-            database.updateEntry(entry);
-        } else {
-            Log.w("MIKE:", "Attempting to create new entry");
-            database.addEntry(entry);
-        }
     }
 }
