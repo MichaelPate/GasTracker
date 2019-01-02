@@ -5,6 +5,8 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -102,7 +104,8 @@ public class sqliteHelperClass extends SQLiteOpenHelper {
         // Iterate through the list ad add the entries to the list
         if (cursor.moveToFirst()) {
             do {
-                logEntryClass entry = new logEntryClass(Integer.parseInt(cursor.getString(1)));
+                logEntryClass entry =
+                        new logEntryClass(Integer.parseInt(cursor.getString(1)));
                 entry.setDate(cursor.getString(2));
                 entry.setDistance(cursor.getString(3));
                 entry.setPrice(cursor.getString(4));
@@ -128,7 +131,7 @@ public class sqliteHelperClass extends SQLiteOpenHelper {
         // Iterate through the list ad add the entries to the list
         if (cursor.moveToFirst()) {
             do {
-                if (cursor.getString(1) == Integer.toString(entry.getId())) {
+                if (cursor.getString(1).equals(Integer.toString(entry.getId()))) {
                     primaryKeyId = Integer.parseInt(cursor.getString(0));
                     break;
                 }
@@ -147,6 +150,7 @@ public class sqliteHelperClass extends SQLiteOpenHelper {
         // Update the row at return
         return db.update(TABLE_ENTRIES, entryAttribs, KEY_ID+"=?",
                 new String[] {String.valueOf(primaryKeyId)});
+
     }
 
     // Delete a single entry

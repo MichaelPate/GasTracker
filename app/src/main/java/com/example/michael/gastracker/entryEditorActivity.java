@@ -73,6 +73,7 @@ public class entryEditorActivity extends AppCompatActivity {
 
     public void saveChanges(View v) {
         // Write changes to the entry copy
+        entryToEdit.setId(entryId);
         entryToEdit.setDate(date_entry.getText().toString());
         entryToEdit.setDistance(distance_entry.getText().toString());
         entryToEdit.setPrice(price_entry.getText().toString());
@@ -93,8 +94,9 @@ public class entryEditorActivity extends AppCompatActivity {
     public void goBack(View v) {
         // If the entry exists, go back to entry viewer, if not, go back to home
         if (entryAlreadyExists) {
-            Intent goBack = new Intent(entryEditorActivity.this, entryViewActivity.class);
-            goBack.putExtra("id", Integer.toString(entryId) + " - ");
+            Intent goBack =
+                    new Intent(entryEditorActivity.this, entryViewActivity.class);
+            goBack.putExtra("id", Integer.toString(entryId));
             entryEditorActivity.this.startActivity(goBack);
         } else {
             Intent goBack = new Intent(entryEditorActivity.this, MainActivity.class);

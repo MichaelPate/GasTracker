@@ -42,7 +42,7 @@ public class entryViewActivity extends AppCompatActivity {
         title_bar = findViewById(R.id.testView);
 
         // Get the entry ID from the intent
-        entryId = Integer.parseInt(getIntent().getStringExtra("id").split(" ")[0]);
+        entryId = Integer.parseInt(getIntent().getStringExtra("id"));
 
         // Set the title to make it looks nice
         title_bar.setText("Entry #" + entryId);
