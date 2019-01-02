@@ -57,11 +57,11 @@ public class entryViewActivity extends AppCompatActivity {
     }
 
     public void delete(View v) {
-        // For any entries with a higher entryId, decrease that by one so that it closes the gap
+        int deletedId = entryToView.getId();
+
         for (logEntryClass e : db.getAllEntries()) {
-            if(e.getId() > entryToView.getId()) {
-                e.setId(e.getId() - 1);
-                db.updateEntry(e);
+            if(e.getId() > deletedId) {
+                db.updateEntry(e, true);
             }
         }
 

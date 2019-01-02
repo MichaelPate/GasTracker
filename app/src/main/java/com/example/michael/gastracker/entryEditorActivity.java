@@ -82,7 +82,7 @@ public class entryEditorActivity extends AppCompatActivity {
 
         // Call the database and update the entry there
         if (entryAlreadyExists) {
-            db.updateEntry(entryToEdit);
+            db.updateEntry(entryToEdit, false);
         } else {
             db.addEntry(entryToEdit);
         }

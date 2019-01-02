@@ -120,7 +120,7 @@ public class sqliteHelperClass extends SQLiteOpenHelper {
     }
 
     // Updates a single entry
-    public int updateEntry(logEntryClass entry) {
+    public int updateEntry(logEntryClass entry, boolean decIdWhenDone) {
         // Get the primary key value of entry, so that we have the whereClause of db.update().
         int primaryKeyId = 0;
         String sqlQuery = "SELECT * FROM " + TABLE_ENTRIES;
@@ -139,7 +139,13 @@ public class sqliteHelperClass extends SQLiteOpenHelper {
         }
 
         ContentValues entryAttribs = new ContentValues();
-        entryAttribs.put(KEY_ENTRYID, Integer.toString(entry.getId()));
+
+        if(decIdWhenDone) {
+            entryAttribs.put(KEY_ENTRYID, Integer.toString(entry.getId() - 1));
+        } else {
+            entryAttribs.put(KEY_ENTRYID, Integer.toString(entry.getId()));
+        }
+
         entryAttribs.put(KEY_DATE, entry.getDate());
         entryAttribs.put(KEY_DISTANCE, entry.getDistance());
         entryAttribs.put(KEY_PRICE, entry.getPrice());
@@ -164,7 +170,7 @@ public class sqliteHelperClass extends SQLiteOpenHelper {
         // Iterate through the list ad add the entries to the list
         if (cursor.moveToFirst()) {
             do {
-                if (cursor.getString(1) == Integer.toString(entry.getId())) {
+                if (cursor.getString(1).equals(Integer.toString(entry.getId()))) {
                     primaryKeyId = Integer.parseInt(cursor.getString(0));
                     break;
                 }
