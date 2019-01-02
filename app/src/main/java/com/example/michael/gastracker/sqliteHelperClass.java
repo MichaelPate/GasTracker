@@ -184,10 +184,6 @@ public class sqliteHelperClass extends SQLiteOpenHelper {
 
     // Get a count of all entries
     public int getEntryCount() {
-        String query = "SELECT * FROM " + TABLE_ENTRIES;
-        SQLiteDatabase database = this.getReadableDatabase();
-        Cursor cursor = database.rawQuery(query, null);
-        cursor.close();
-        return cursor.getCount();
+        return this.getAllEntries().size();
     }
 }

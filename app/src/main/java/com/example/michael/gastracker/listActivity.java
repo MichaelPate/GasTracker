@@ -35,6 +35,9 @@ public class listActivity extends AppCompatActivity {
         List<logEntryClass> logList = db.getAllEntries();
 
         // Only the ID, date, and cost is displayed, so get those for each log entry on record
+        if (db.getEntryCount() == 0) {
+            addItem("No entries to display!");
+        }
         for (logEntryClass entry : logList) {
             String header = Integer.toString(entry.getId());
             header += " - " + entry.getDate() + " - $";
@@ -51,9 +54,13 @@ public class listActivity extends AppCompatActivity {
                 // Create an intent to open the entry viewer activity, passing the located index.
                 Intent readEntry =
                         new Intent(listActivity.this, entryViewActivity.class);
-                clickedValue = clickedValue.split(" ")[0];
-                readEntry.putExtra("id", clickedValue);
-                listActivity.this.startActivity(readEntry);
+                // Only pass the intent if the item that is clicked is a real entry.
+                if (clickedValue != "No entries to display!") {
+                    clickedValue = clickedValue.split(" ")[0];
+                    readEntry.putExtra("id", clickedValue);
+                    listActivity.this.startActivity(readEntry);
+                }
+
             }
         });
     }

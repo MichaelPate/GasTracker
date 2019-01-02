@@ -149,21 +149,6 @@
         app:layout_constraintTop_toBottomOf="@+id/avgPrice_box" />
 
     <Button
-        android:id="@+id/settings_btn"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginBottom="64dp"
-        android:onClick="settingsPage"
-        android:text="@string/settingsBtn"
-        android:textColor="@android:color/holo_red_dark"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/about_btn"
-        app:layout_constraintStart_toStartOf="parent" />
-
-    <Button
         android:id="@+id/about_btn"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -197,15 +182,4 @@
         app:layout_constraintStart_toEndOf="@+id/totalExpense_lbl"
         app:layout_constraintTop_toBottomOf="@+id/date_box" />
 
-    <TextView
-        android:id="@+id/textView7"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginBottom="16dp"
-        android:text="Settings is under construction."
-        android:textColor="@android:color/holo_orange_dark"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toTopOf="@+id/settings_btn"
-        app:layout_constraintStart_toStartOf="parent" />
 </android.support.constraint.ConstraintLayout>
